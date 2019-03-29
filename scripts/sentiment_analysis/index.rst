@@ -5,20 +5,22 @@ Sentiment Analysis
 
 Through Fine-tuning Word Language Model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+通过微调词的语言模型
 
 This script can be used to train a sentiment analysis model from scratch, or fine-tune a pre-trained language model.
 The pre-trained language models are loaded from Gluon NLP Toolkit model zoo. It also showcases how to use different
 bucketing strategies to speed up training.
+加速训练策略
 
 Use the following command to run without using pre-trained model (`log <https://github.com/dmlc/web-data/blob/master/gluonnlp/logs/sentiment/sentiment_raw_20180817.log>`__)
 
-.. code-block:: console
+.. code-block:: console 不使用预训练模型、 命令如下
 
    $ python finetune_lm.py --gpu 0 --batch_size 16 --bucket_type fixed --epochs 3 --dropout 0 --no_pretrained --lr 0.005 --valid_ratio 0.1 --save-prefix imdb_lstm_200  # Test Accuracy 85.60
 
 Use the following command to run with pre-trained model (`log <https://github.com/dmlc/web-data/blob/master/gluonnlp/logs/sentiment/sentiment_pretrained_20180817.log>`__)
 
-.. code-block:: console
+.. code-block:: console 使用预训练词向量，训练结果如连接。实际运行命令如下
 
    $ python finetune_lm.py --gpu 0 --batch_size 16 --bucket_type fixed --epochs 3 --dropout 0 --lr 0.005 --valid_ratio 0.1 --save-prefix imdb_lstm_200  # Test Accuracy 86.46
 
@@ -28,7 +30,7 @@ TextCNN
 
 
 This script can be used to train a sentiment analysis model with convolutional neural networks, i.e., textCNN:
-
+使用卷积神经网络
 Kim, Y. (2014). Convolutional neural networks for sentence classification. arXiv preprint arXiv:1408.5882.
 
 epoch:
@@ -79,27 +81,27 @@ test accuracy (SST-1, SST-2, and TREC) or cross-validation accuracy (MR and Subj
 
 [1]:
 
-.. code-block:: console
+.. code-block:: console 模型为 rand 无预训练词向量
 
    $ python sentiment_analysis_cnn.py --gpu 0 --batch_size 50 --epochs 60 --dropout 0.5 --lr 0.0001 --model_mode rand --data_name MR
 
 [2]:
 
-.. code-block:: console
+.. code-block:: console 模型为 static 有预训练词向量 但要固定
 
    $ python sentiment_analysis_cnn.py --gpu 0 --batch_size 50 --epochs 60 --dropout 0.5 --lr 0.0001 --model_mode static --data_name MR
 
 
 [3]:
 
-.. code-block:: console
+.. code-block:: console 模型为non-static 有预训练词向量 不固定
 
    $ python sentiment_analysis_cnn.py --gpu 0 --batch_size 50 --epochs 60 --dropout 0.5 --lr 0.0001 --model_mode non-static --data_name MR
 
 
 [4]:
 
-.. code-block:: console
+.. code-block:: console 模型是多通道 
 
    $ python sentiment_analysis_cnn.py --gpu 0 --batch_size 50 --epochs 60 --dropout 0.5 --lr 0.0001 --model_mode multichannel --data_name MR
 

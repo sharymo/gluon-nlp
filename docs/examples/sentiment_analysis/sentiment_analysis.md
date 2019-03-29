@@ -1,10 +1,15 @@
 # Sentiment Analysis by Fine-tuning Word Language Model
+通过微调语言模型 进行情感分析
 
 Now that we've covered some advanced topics, let's go back and show how these techniques can help us even when addressing the comparatively simple problem of classification. In particular, we'll look at the classic problem of sentiment analysis: taking an input consisting of a string of text and classifying its sentiment as positive of negative.
+前沿主题 这些新的技术 积极或消极
+
 
 In this notebook, we are going to use GluonNLP to build a sentiment analysis model whose weights are initialized based on a pretrained language model. Using pretrained language model weights is a common approach for semi-supervised learning in NLP. In order to do a good job with large language modeling on a large corpus of text, our model must learn representations that contain information about the structure of natural language. Intuitively, by starting with these good features, vs random features, we're able to converge faster upon a good model for our downsteam task.
+直观地说 收敛
 
 With GluonNLP, we can quickly prototype the model and it's easy to customize. The building process consists of just three simple steps. For this demonstration we'll focus on movie reviews from the Large Movie Review Dataset, also known as the IMDB dataset. Given a movie, our model will output prediction of its sentiment, which can be positive or negative.
+原型设计 定制
 
 
 ## Load mxnet and gluonnlp
@@ -29,12 +34,13 @@ mx.random.seed(123)
 ```
 
 ## Sentiment analysis model with pre-trained language model encoder
-
+具有预训练语言模型编码器的情感分析
 So that we can easily transplant the pre-trained weights, we'll base our model architecture on the pre-trained LM. Following the LSTM layer, we have one representation vector for each word in the sentence. Because we plan to make a single prediction (not one per word), we'll first pool our predictions across time steps before feeding them through a dense layer to produce our final prediction (a single sigmoid output node).
-
+移植 汇集
 ![sa-model](samodel-v3.png)
 
 Specifically, our model represents input words by their embeddings. Following the embedding layer, our model consists of a two-layer LSTM, followed by an average pooling layer, followed by a sigmoid output layer (all illustrated in the figure above)
+平均池化层 sigmoid激活函数
 
 Thus, given an input sequence, the memory cells in the LSTM layer will produce a representation sequence. This representation sequence is then averaged over all timesteps resulting in a fixed-length sentence representation $h$. Finally, we apply a sigmoid output layer on top of $h$. We’re using the sigmoid  because we’re trying to predict if this text has positive or negative sentiment, and a sigmoid activation function squashes the output values to the range [0,1], allowing us to interpret this output as a probability.
 
