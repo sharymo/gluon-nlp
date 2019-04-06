@@ -17,7 +17,7 @@
 __all__ = [
     'MRPCDataset', 'QQPDataset', 'QNLIDataset', 'RTEDataset', 'STSBDataset',
     'COLADataset', 'MNLIDataset', 'WNLIDataset', 'SSTDataset', 'BertEmbeddingDataset',
-    'BERTDatasetTransform'
+    'BERTDatasetTransform', 'TQADataset'
 ]
 
 import os
@@ -27,6 +27,7 @@ from mxnet.metric import Accuracy, F1, MCC, PearsonCorrelation, CompositeEvalMet
 from mxnet.gluon.data import Dataset
 from gluonnlp.data import TSVDataset, BERTSentenceTransform
 from gluonnlp.data.registry import register
+from gluonnlp.base import get_home_dir
 
 
 @register(segment=['train', 'dev', 'test'])
@@ -344,6 +345,44 @@ class SSTDataset(GLUEDataset):
             A_IDX = 1
             fields = [A_IDX]
         super(SSTDataset, self).__init__(
+            path, num_discard_samples=1, fields=fields)
+
+    @staticmethod
+    def get_metric():
+        """Get metrics Accuracy"""
+        return Accuracy()
+
+    @staticmethod
+    def get_labels():
+        """Get classification label ids of the dataset."""
+        return ['0', '1']
+
+
+@register(segment=['train', 'dev', 'test'])
+class TQADataset(GLUEDataset):
+    """Task class for Stanford Sentiment Treebank.
+
+    Parameters
+    ----------
+    segment : str or list of str, default 'train'
+        Dataset segment. Options are 'train', 'dev', 'test' or their combinations.
+    root : str, default '$GLUE_DIR/SST-2
+
+    """
+    task_name = 'TQA'
+    is_pair = False
+
+    def __init__(self, segment='train', root=os.path.join(get_home_dir(), 'TextQualityAnalysis')):
+        self._supported_segments = ['train', 'dev', 'test']
+        assert segment in self._supported_segments, 'Unsupported segment: %s' % segment
+        path = os.path.join(root, 'chinese/c_{}.txt'.format(segment))
+        if segment in ['train', 'dev']:
+            A_IDX, LABEL_IDX = 1, 2
+            fields = [A_IDX, LABEL_IDX]
+        elif segment == 'test':
+            A_IDX = 1
+            fields = [A_IDX]
+        super(TQADataset, self).__init__(
             path, num_discard_samples=1, fields=fields)
 
     @staticmethod
