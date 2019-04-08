@@ -50,7 +50,7 @@ from gluonnlp.data import BERTTokenizer
 from bert import BERTClassifier, BERTRegression
 from dataset import MRPCDataset, QQPDataset, RTEDataset, \
     STSBDataset, BERTDatasetTransform, \
-    QNLIDataset, COLADataset, MNLIDataset, WNLIDataset, SSTDataset
+    QNLIDataset, COLADataset, MNLIDataset, WNLIDataset, SSTDataset, TQADataset
 
 tasks = {
     'MRPC': MRPCDataset,
@@ -61,7 +61,8 @@ tasks = {
     'CoLA': COLADataset,
     'MNLI': MNLIDataset,
     'WNLI': WNLIDataset,
-    'SST': SSTDataset
+    'SST': SSTDataset,
+    'TQA': TQADataset
 }
 
 parser = argparse.ArgumentParser(
@@ -195,8 +196,8 @@ dataset = args.bert_dataset
 pretrained_bert_parameters = args.pretrained_bert_parameters
 model_parameters = args.model_parameters
 
-get_pretrained = not (pretrained_bert_parameters is not None
-                      or model_parameters is not None)
+get_pretrained = not (pretrained_bert_parameters is not None or
+                      model_parameters is not None)
 bert, vocabulary = get_bert_model(
     model_name=model_name,
     dataset_name=dataset,

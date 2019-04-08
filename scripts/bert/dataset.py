@@ -366,13 +366,14 @@ class TQADataset(GLUEDataset):
     ----------
     segment : str or list of str, default 'train'
         Dataset segment. Options are 'train', 'dev', 'test' or their combinations.
-    root : str, default '$GLUE_DIR/SST-2
+    root : str, default 
 
     """
     task_name = 'TQA'
     is_pair = False
+    root = './data/TextQualityAnalysis'
 
-    def __init__(self, segment='train', root=os.path.join(get_home_dir(), 'TextQualityAnalysis')):
+    def __init__(self, segment='train', root=os.path.join('./my_data', 'TextQualityAnalysis')):
         self._supported_segments = ['train', 'dev', 'test']
         assert segment in self._supported_segments, 'Unsupported segment: %s' % segment
         path = os.path.join(root, 'chinese/c_{}.txt'.format(segment))
@@ -393,7 +394,7 @@ class TQADataset(GLUEDataset):
     @staticmethod
     def get_labels():
         """Get classification label ids of the dataset."""
-        return ['0', '1']
+        return ['0', '1', '2']
 
 
 @register(segment=[
@@ -583,6 +584,8 @@ class BERTDatasetTransform(object):
         input_ids, valid_length, segment_ids = self._bert_xform(line[:-1])
 
         label = line[-1]
+        print(label)
+        print(self._label_map)
         if self.labels:  # for classification task
             label = self._label_map[label]
         label = np.array([label], dtype=self.label_dtype)
